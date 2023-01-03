@@ -1,0 +1,22 @@
+{
+	"parser": "@babel/eslint-parser",
+	"parserOptions": {
+		"requireConfigFile": false,
+		"babelOptions": {
+			"presets": ["@babel/preset-react"]
+		}
+	},
+	"rules": {
+		"indent": [2, "tab"],
+		"no-tabs": 0,
+		"react/jsx-indent": [2, "tab"],
+		"react/jsx-indent-props": [2, "tab"],
+		"max-len": ["error", { "code": 110, "ignoreComments": true }],
+		"object-curly-newline": [
+			"error",
+			{
+				"ImportDeclaration": { "minProperties": 3, "consistent": false, "multiline": true }
+			}
+		]
+	}
+}

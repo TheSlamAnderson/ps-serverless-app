@@ -1,7 +1,11 @@
 {
-  "root": true,
-  "parser": "@babel/eslint-parser",
-  "parserOptions": {
-    "requireConfigFile": false
-  }
+	"root": true,
+	"parser": "@babel/eslint-parser",
+	"parserOptions": {
+		"requireConfigFile": false
+	},
+	"rules": {
+		"indent": [2, "tab"],
+		"no-tabs": 0
+	}
 }

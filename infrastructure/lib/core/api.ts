@@ -7,95 +7,110 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as sqs from '@aws-cdk/aws-sqs';
 
 interface ApplicationAPIProps {
-  commentsService: lambda.IFunction;
+	commentsService: lambda.IFunction;
+	documentsService: lambda.IFunction;
 }
 
 export class ApplicationAPI extends cdk.Construct {
-  public readonly httpApi: apigw.HttpApi;
+	public readonly httpApi: apigw.HttpApi;
 
-  constructor(scope: cdk.Construct, id: string, props: ApplicationAPIProps) {
-    super(scope, id);
+	constructor(scope: cdk.Construct, id: string, props: ApplicationAPIProps) {
+		super(scope, id);
 
-    const serviceMethods = [
-      HttpMethod.GET,
-      HttpMethod.POST,
-      HttpMethod.DELETE,
-      HttpMethod.PUT,
-      HttpMethod.PATCH,
-    ];
+		const serviceMethods = [
+			HttpMethod.GET,
+			HttpMethod.POST,
+			HttpMethod.DELETE,
+			HttpMethod.PUT,
+			HttpMethod.PATCH,
+		];
 
-    // API Gateway ------------------------------------------------------
+		// API Gateway ------------------------------------------------------
 
-    this.httpApi = new apigw.HttpApi(this, 'HttpProxyApi', {
-      apiName: 'serverless-api',
-      createDefaultStage: true,
-      corsPreflight: {
-        allowHeaders: ['Authorization', 'Content-Type', '*'],
-        allowMethods: [
-          CorsHttpMethod.GET,
-          CorsHttpMethod.POST,
-          CorsHttpMethod.DELETE,
-          CorsHttpMethod.PUT,
-          CorsHttpMethod.PATCH,
-        ],
-        allowOrigins: ['http://localhost:3000', 'https://*'],
-        allowCredentials: true,
-        maxAge: cdk.Duration.days(10),
-      },
-    });
+		this.httpApi = new apigw.HttpApi(this, 'HttpProxyApi', {
+			apiName: 'serverless-api',
+			createDefaultStage: true,
+			corsPreflight: {
+				allowHeaders: ['Authorization', 'Content-Type', '*'],
+				allowMethods: [
+					CorsHttpMethod.GET,
+					CorsHttpMethod.POST,
+					CorsHttpMethod.DELETE,
+					CorsHttpMethod.PUT,
+					CorsHttpMethod.PATCH,
+				],
+				allowOrigins: ['http://localhost:3000', 'https://*'],
+				allowCredentials: true,
+				maxAge: cdk.Duration.days(10),
+			},
+		});
 
-    // Comments Service -------------------------------------------------
+		// Comments Service -------------------------------------------------
 
-    const commentsServiceIntegration = new apigi.HttpLambdaIntegration(
-      'CommentsServiceIntegration',
-      props.commentsService,
-      {},
-    );
+		const commentsServiceIntegration = new apigi.HttpLambdaIntegration(
+			'CommentsServiceIntegration',
+			props.commentsService,
+			{},
+		);
 
-    this.httpApi.addRoutes({
-      path: `/comments/{proxy+}`,
-      methods: serviceMethods,
-      integration: commentsServiceIntegration,
-    });
+		this.httpApi.addRoutes({
+			path: `/comments/{proxy+}`,
+			methods: serviceMethods,
+			integration: commentsServiceIntegration,
+		});
 
-    // Moderate ----------------------------------------------------------
+		// Documents Service ------------------------------------------------
 
-    const queue = new sqs.Queue(this, 'ModerationQueue');
+		const documentsServiceIntegration = new apigi.HttpLambdaIntegration(
+			'DocumentsServiceIntegration',
+			props.documentsService,
+			{},
+		);
 
-    const moderateRole = new iam.Role(this, 'ModerateRole', {
-      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
-    });
+		this.httpApi.addRoutes({
+			path: `/documents/{proxy+}`,
+			methods: serviceMethods,
+			integration: documentsServiceIntegration,
+		});
 
-    moderateRole.addToPolicy(
-      new iam.PolicyStatement({
-        resources: [queue.queueArn],
-        actions: ['sqs:SendMessage'],
-      }),
-    );
+		// Moderate ----------------------------------------------------------
 
-    const sqsIntegration = new apigw.CfnIntegration(this, 'ModerateIntegration', {
-      apiId: this.httpApi.apiId,
-      integrationType: 'AWS_PROXY',
-      integrationSubtype: 'SQS-SendMessage',
-      credentialsArn: moderateRole.roleArn,
-      requestParameters: {
-        QueueUrl: queue.queueUrl,
-        MessageBody: '$request.body',
-      },
-      payloadFormatVersion: '1.0',
-      timeoutInMillis: 10000,
-    });
+		const queue = new sqs.Queue(this, 'ModerationQueue');
 
-    new apigw.CfnRoute(this, 'ModerateRoute', {
-      apiId: this.httpApi.apiId,
-      routeKey: 'POST /moderate',
-      target: `integrations/${sqsIntegration.ref}`,
-    });
+		const moderateRole = new iam.Role(this, 'ModerateRole', {
+			assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+		});
 
-    // Outputs -----------------------------------------------------------
+		moderateRole.addToPolicy(
+			new iam.PolicyStatement({
+				resources: [queue.queueArn],
+				actions: ['sqs:SendMessage'],
+			}),
+		);
 
-    new cdk.CfnOutput(this, 'URL', {
-      value: this.httpApi.apiEndpoint,
-    });
-  }
+		const sqsIntegration = new apigw.CfnIntegration(this, 'ModerateIntegration', {
+			apiId: this.httpApi.apiId,
+			integrationType: 'AWS_PROXY',
+			integrationSubtype: 'SQS-SendMessage',
+			credentialsArn: moderateRole.roleArn,
+			requestParameters: {
+				QueueUrl: queue.queueUrl,
+				MessageBody: '$request.body',
+			},
+			payloadFormatVersion: '1.0',
+			timeoutInMillis: 10000,
+		});
+
+		new apigw.CfnRoute(this, 'ModerateRoute', {
+			apiId: this.httpApi.apiId,
+			routeKey: 'POST /moderate',
+			target: `integrations/${sqsIntegration.ref}`,
+		});
+
+		// Outputs -----------------------------------------------------------
+
+		new cdk.CfnOutput(this, 'URL', {
+			value: this.httpApi.apiEndpoint,
+		});
+	}
 }
