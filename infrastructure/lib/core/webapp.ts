@@ -5,80 +5,80 @@ import * as cwt from 'cdk-webapp-tools';
 import * as apigw from '@aws-cdk/aws-apigatewayv2';
 
 interface WebAppProps {
-	hostingBucket: s3.IBucket;
-	relativeWebAppPath: string;
-	baseDirectory: string;
-	httpApi: apigw.IHttpApi;
+  hostingBucket: s3.IBucket;
+  relativeWebAppPath: string;
+  baseDirectory: string;
+  httpApi: apigw.IHttpApi;
 }
 
 export class WebApp extends cdk.Construct {
-	public readonly webDistribution: cloudfront.CloudFrontWebDistribution;
+  public readonly webDistribution: cloudfront.CloudFrontWebDistribution;
 
-	constructor(scope: cdk.Construct, id: string, props: WebAppProps) {
-		super(scope, id);
+  constructor(scope: cdk.Construct, id: string, props: WebAppProps) {
+    super(scope, id);
 
-		const oai = new cloudfront.OriginAccessIdentity(this, 'WebHostingOAI', {});
+    const oai = new cloudfront.OriginAccessIdentity(this, 'WebHostingOAI', {});
 
-		const cloudfrontProps: any = {
-			originConfigs: [
-				{
-					s3OriginSource: {
-						s3BucketSource: props.hostingBucket,
-						originAccessIdentity: oai,
-					},
-					behaviors: [{ isDefaultBehavior: true }],
-				},
-			],
-			errorConfigurations: [
-				{
-					errorCachingMinTtl: 86400,
-					errorCode: 403,
-					responseCode: 200,
-					responsePagePath: '/index.html',
-				},
-				{
-					errorCachingMinTtl: 86400,
-					errorCode: 404,
-					responseCode: 200,
-					responsePagePath: '/index.html',
-				},
-			],
-		};
+    const cloudfrontProps: any = {
+      originConfigs: [
+        {
+          s3OriginSource: {
+            s3BucketSource: props.hostingBucket,
+            originAccessIdentity: oai,
+          },
+          behaviors: [{ isDefaultBehavior: true }],
+        },
+      ],
+      errorConfigurations: [
+        {
+          errorCachingMinTtl: 86400,
+          errorCode: 403,
+          responseCode: 200,
+          responsePagePath: '/index.html',
+        },
+        {
+          errorCachingMinTtl: 86400,
+          errorCode: 404,
+          responseCode: 200,
+          responsePagePath: '/index.html',
+        },
+      ],
+    };
 
-		this.webDistribution = new cloudfront.CloudFrontWebDistribution(
-			this,
-			'AppHostingDistribution',
-			cloudfrontProps,
-		);
+    this.webDistribution = new cloudfront.CloudFrontWebDistribution(
+      this,
+      'AppHostingDistribution',
+      cloudfrontProps,
+    );
 
-		props.hostingBucket.grantRead(oai);
+    props.hostingBucket.grantRead(oai);
 
-		// Deploy Web App ----------------------------------------------------
+    // Deploy Web App ----------------------------------------------------
 
-		const deployment = new cwt.WebAppDeployment(this, 'WebAppDeploy', {
-			baseDirectory: props.baseDirectory,
-			relativeWebAppPath: props.relativeWebAppPath,
-			webDistribution: this.webDistribution,
-			webDistributionPaths: ['/*'],
-			buildCommand: 'yarn build',
-			buildDirectory: 'build',
-			bucket: props.hostingBucket,
-			prune: false,
-		});
+    const deployment = new cwt.WebAppDeployment(this, 'WebAppDeploy', {
+      baseDirectory: props.baseDirectory,
+      relativeWebAppPath: props.relativeWebAppPath,
+      webDistribution: this.webDistribution,
+      webDistributionPaths: ['/*'],
+      buildCommand: 'yarn build',
+      buildDirectory: 'build',
+      bucket: props.hostingBucket,
+      prune: false,
+    });
 
-		new cdk.CfnOutput(this, 'URL', {
-			value: `https://${this.webDistribution.distributionDomainName}/`,
-		});
+    new cdk.CfnOutput(this, 'URL', {
+      value: `https://${this.webDistribution.distributionDomainName}/`,
+    });
 
-		// Web App Config ------------------------------------------------------
+    // Web App Config ------------------------------------------------------
 
-		new cwt.WebAppConfig(this, 'WebAppConfig', {
-			bucket: props.hostingBucket,
-			key: 'config.js',
-			configData: {
-				apiEndpoint: props.httpApi.apiEndpoint,
-			},
-			globalVariableName: 'appConfig',
-		}).node.addDependency(deployment);
-	}
+    new cwt.WebAppConfig(this, 'WebAppConfig', {
+      bucket: props.hostingBucket,
+      key: 'config.js',
+      configData: {
+        apiEndpoint: props.httpApi.apiEndpoint,
+      },
+      globalVariableName: 'appConfig',
+    }).node.addDependency(deployment);
+  }
 }

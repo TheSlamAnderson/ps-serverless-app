@@ -5,17 +5,17 @@ import { NodejsFunction, NodejsFunctionProps } from '@aws-cdk/aws-lambda-nodejs'
 type NodejsServiceFunctionProps = NodejsFunctionProps;
 
 export class NodejsServiceFunction extends NodejsFunction {
-	constructor(scope: cdk.Construct, id: string, props: NodejsServiceFunctionProps) {
-		const runtime = props.runtime ?? lambda.Runtime.NODEJS_16_X;
-		const handler = 'handler';
-		const bundling = {
-			externalModules: ['aws-sdk'],
-		};
-		super(scope, id, {
-			...props,
-			runtime,
-			handler,
-			bundling,
-		});
-	}
+  constructor(scope: cdk.Construct, id: string, props: NodejsServiceFunctionProps) {
+    const runtime = props.runtime ?? lambda.Runtime.NODEJS_16_X;
+    const handler = 'handler';
+    const bundling = {
+      externalModules: ['aws-sdk'],
+    };
+    super(scope, id, {
+      ...props,
+      runtime,
+      handler,
+      bundling,
+    });
+  }
 }

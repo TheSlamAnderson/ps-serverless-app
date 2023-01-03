@@ -22,10 +22,10 @@ let _dynamoDB;
  * @returns {object} DynamoDB Client
  */
 const dynamoDB = () => {
-	if (!_dynamoDB) {
-		_dynamoDB = new AWS.DynamoDB.DocumentClient();
-	}
-	return _dynamoDB;
+  if (!_dynamoDB) {
+    _dynamoDB = new AWS.DynamoDB.DocumentClient();
+  }
+  return _dynamoDB;
 };
 
 let _s3;
@@ -36,10 +36,10 @@ let _s3;
  * @returns {object} Amazon S3 Client
  */
 const s3 = () => {
-	if (!_s3) {
-		_s3 = new AWS.S3();
-	}
-	return _s3;
+  if (!_s3) {
+    _s3 = new AWS.S3();
+  }
+  return _s3;
 };
 
 let _textract;
@@ -50,10 +50,10 @@ let _textract;
  * @returns {object} Textract Client
  */
 const textract = () => {
-	if (!_textract) {
-		_textract = new AWS.Textract();
-	}
-	return _textract;
+  if (!_textract) {
+    _textract = new AWS.Textract();
+  }
+  return _textract;
 };
 
 let _ses;
@@ -64,10 +64,10 @@ let _ses;
  * @returns {object} Simple Email Service Client
  */
 const ses = () => {
-	if (!_ses) {
-		_ses = new AWS.SES();
-	}
-	return _ses;
+  if (!_ses) {
+    _ses = new AWS.SES();
+  }
+  return _ses;
 };
 
 let _eventbridge;
@@ -78,16 +78,16 @@ let _eventbridge;
  * @returns {object} Eventbridge Client
  */
 const eventbridge = () => {
-	if (!_eventbridge) {
-		_eventbridge = new AWS.EventBridge();
-	}
-	return _eventbridge;
+  if (!_eventbridge) {
+    _eventbridge = new AWS.EventBridge();
+  }
+  return _eventbridge;
 };
 
 export const AWSClients = {
-	dynamoDB,
-	s3,
-	textract,
-	ses,
-	eventbridge,
+  dynamoDB,
+  s3,
+  textract,
+  ses,
+  eventbridge,
 };
