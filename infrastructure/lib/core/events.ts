@@ -34,6 +34,7 @@ export class ApplicationEvents extends cdk.Construct {
     uploadRule.addTarget(stateMachineTarget);
 
     // Custom Event Bus for App ------------------------------------------
+
     const bus = new events.EventBus(this, 'AppEventBus', {
       eventBusName: 'com.globomantics.dms',
     });
@@ -50,5 +51,18 @@ export class ApplicationEvents extends cdk.Construct {
     });
 
     commentAddedRule.addTarget(new targets.LambdaFunction(props.notificationsService));
+
+    const failedProcessingRule = new events.Rule(this, 'FailedProcessingRule', {
+      eventBus: bus,
+      enabled: true,
+      description: 'When a PDF file fails processing',
+      eventPattern: {
+        source: ['com.globomantics.dms.processing'],
+        detailType: ['ProcessingFailed'],
+      },
+      ruleName: 'ProcessingFailedRule',
+    });
+
+    failedProcessingRule.addTarget(new targets.LambdaFunction(props.notificationsService));
   }
 }

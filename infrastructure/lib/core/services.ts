@@ -55,6 +55,7 @@ export class AppServices extends cdk.Construct {
     this.documentsService.addEnvironment('ASSET_BUCKET', props.assetBucket.bucketName);
 
     // Notifications Service ---------------------------------------------
+
     this.notificationsService = new NodejsServiceFunction(this, 'NotificationsServiceLambda', {
       entry: path.join(__dirname, '../../../services/notifications/index.js'),
     });

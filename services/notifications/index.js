@@ -1,3 +1,12 @@
+/**
+ * Notifications Service
+ *
+ * This is a microservice that is used in the Pluralsight path on Serverless
+ * architecture.
+ *
+ * @author David Tucker <david@mindmill.co>
+ */
+
 import { AWSClients } from '../common';
 
 const ses = AWSClients.ses();
@@ -8,7 +17,7 @@ const emailAddress = process.env.EMAIL_ADDRESS;
 const sendEmail = async (message, subject) => {
   const params = {
     Destination: {
-      ToAddresses: [emailAddress],
+      ToAddresses: emailAddress,
     },
     Message: {
       Body: {
@@ -63,10 +72,10 @@ export const handler = async (event, context) => {
   const { source } = event;
   const detailType = event['detail-type'];
 
-  if (source == 'com.globomantics.dms.processing' && detailType === 'ProcessingFailed') {
+  if (source === 'com.globomantics.dms.processing' && detailType === 'ProcessingFailed') {
     return handleProcessingFailed(event, context);
   }
-  if (source == 'com.globomantics.dms.comments' && detailType === 'CommentAdded') {
+  if (source === 'com.globomantics.dms.comments' && detailType === 'CommentAdded') {
     return handleCommentAdded(event, context);
   }
 

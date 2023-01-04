@@ -70,7 +70,7 @@ const createComment = async (request, response) => {
   };
   await dynamoDB.put(params).promise();
 
-  // Send comment event using EventBridge
+  // Send comment event using Eventbridge
   // This will allow us to connect into this event for notifications
   const detail = {
     documentId: request.pathVariables.docid,
