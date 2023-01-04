@@ -18,6 +18,8 @@ export class AppServices extends cdk.Construct {
 
   public readonly documentsService: NodejsFunction;
 
+  public readonly notificationsService: NodejsFunction;
+
   constructor(scope: cdk.Construct, id: string, props: AppServicesProps) {
     super(scope, id);
 
@@ -44,5 +46,25 @@ export class AppServices extends cdk.Construct {
     this.documentsService.addEnvironment('DYNAMO_DB_TABLE', props.documentsTable.tableName);
     this.documentsService.addEnvironment('UPLOAD_BUCKET', props.uploadBucket.bucketName);
     this.documentsService.addEnvironment('ASSET_BUCKET', props.assetBucket.bucketName);
+
+    // Notifications Service ---------------------------------------------
+    this.notificationsService = new NodejsServiceFunction(this, 'NotificationsServiceLambda', {
+      entry: path.join(__dirname, '../../../services/notifications/index.js'),
+    });
+
+    props.documentsTable.grantReadData(this.notificationsService);
+
+    this.notificationsService.addToRolePolicy(
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['ses:SendEmail'],
+      }),
+    );
+
+    this.notificationsService.addEnvironment('DYNAMO_DB_TABLE', props.documentsTable.tableName);
+    this.notificationsService.addEnvironment(
+      'EMAIL_ADDRESS',
+      ssm.StringParameter.valueForStringParameter(this, 'dms-globomantics-email'),
+    );
   }
 }

@@ -31,5 +31,10 @@ export class ApplicationEvents extends cdk.Construct {
 
     const stateMachineTarget = new targets.SfnStateMachine(props.processingStateMachine, {});
     uploadRule.addTarget(stateMachineTarget);
+
+    // Custom Event Bus for App ------------------------------------------
+    const bus = new events.EventBus(this, 'AppEventBus', {
+      eventBusName: 'com.globomantics.dms',
+    });
   }
 }
