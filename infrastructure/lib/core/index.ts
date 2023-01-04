@@ -35,6 +35,7 @@ export class ApplicationStack extends cdk.Stack {
     new ApplicationEvents(this, 'Events', {
       uploadBucket: storage.uploadBucket,
       processingStateMachine: processing.processingStateMachine,
+      notificationsService: services.notificationsService,
     });
 
     new WebApp(this, 'WebApp', {
