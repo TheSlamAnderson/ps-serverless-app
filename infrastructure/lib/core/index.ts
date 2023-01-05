@@ -14,7 +14,7 @@ export class ApplicationStack extends cdk.Stack {
 
     const storage = new AssetStorage(this, 'Storage');
 
-    new ApplicationAuth(this, 'Auth');
+    const auth = new ApplicationAuth(this, 'Auth');
 
     const database = new AppDatabase(this, 'Database');
 
@@ -46,6 +46,8 @@ export class ApplicationStack extends cdk.Stack {
       baseDirectory: '../',
       relativeWebAppPath: 'webapp',
       httpApi: api.httpApi,
+      userPool: auth.userPool,
+      userPoolClient: auth.userPoolClient,
     });
   }
 }
