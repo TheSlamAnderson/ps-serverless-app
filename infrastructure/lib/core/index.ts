@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core';
 import { ApplicationAPI } from './api';
 import { AppDatabase } from './database';
 import { ApplicationEvents } from './events';
+import { ApplicationAuth } from './auth';
 import { DocumentProcessing } from './processing';
 import { AppServices } from './services';
 import { AssetStorage } from './storage';
@@ -12,6 +13,8 @@ export class ApplicationStack extends cdk.Stack {
     super(scope, id, props);
 
     const storage = new AssetStorage(this, 'Storage');
+
+    new ApplicationAuth(this, 'Auth');
 
     const database = new AppDatabase(this, 'Database');
 
