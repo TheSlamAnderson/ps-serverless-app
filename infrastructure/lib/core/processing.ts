@@ -94,10 +94,14 @@ export class DocumentProcessing extends cdk.Construct {
       }),
     );
 
-    const getTextDetectionResultsInvoke = new tasks.LambdaInvoke(this, 'Get Text Detection Results', {
-      lambdaFunction: getTextDetectionResults,
-      outputPath: '$.Payload',
-    });
+    const getTextDetectionResultsInvoke = new tasks.LambdaInvoke(
+      this,
+      'Get Text Detection Results',
+      {
+        lambdaFunction: getTextDetectionResults,
+        outputPath: '$.Payload',
+      },
+    );
 
     getTextDetectionResultsInvoke.addRetry({
       maxAttempts: 100,

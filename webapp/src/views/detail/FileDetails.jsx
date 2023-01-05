@@ -6,8 +6,12 @@ import MetadataSection from '../../components/MetadataSection';
 function FileDetails({ details }) {
   return (
     <MetadataSection title="File Details">
-      {details && details.fileName && <MetadataItem title="Original File Name" value={details.fileName} />}
-      {details && details.contentType && <MetadataItem title="Content Type" value={details.contentType} />}
+      {details && details.fileName && (
+        <MetadataItem title="Original File Name" value={details.fileName} />
+      )}
+      {details && details.contentType && (
+        <MetadataItem title="Content Type" value={details.contentType} />
+      )}
       {details && details.encoding && <MetadataItem title="Encoding" value={details.encoding} />}
     </MetadataSection>
   );

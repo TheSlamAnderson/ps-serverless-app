@@ -30,7 +30,10 @@ function DocumentInfo({ docInfo }) {
         </div>
       )}
       {docInfo && docInfo.DateUploaded && (
-        <MetadataItem title="Date Uploaded" value={getFormattedDate(new Date(docInfo.DateUploaded))} />
+        <MetadataItem
+          title="Date Uploaded"
+          value={getFormattedDate(new Date(docInfo.DateUploaded))}
+        />
       )}
       {docInfo && docInfo.FileSize && (
         <MetadataItem title="File Size" value={getReadableFileSize(docInfo.FileSize)} />

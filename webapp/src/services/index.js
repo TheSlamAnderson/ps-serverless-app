@@ -59,7 +59,9 @@ export const getCurrentUserProfile = async () => {
 };
 
 export const updateCurrentUserProfile = async (name, shouldDeletePicture, picture) => {
-  console.log(`[MOCK] Update Current User ${name} Delete Pic: ${shouldDeletePicture} Pic: ${picture}`);
+  console.log(
+    `[MOCK] Update Current User ${name} Delete Pic: ${shouldDeletePicture} Pic: ${picture}`,
+  );
   return mock.mockCall({}, 1000);
 };
 

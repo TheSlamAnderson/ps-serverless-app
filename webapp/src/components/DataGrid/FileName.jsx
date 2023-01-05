@@ -27,11 +27,7 @@ function FileName({ file }) {
   return (
     <Link className={classes.root} to={file.FileSize ? `/document/${file.PK}` : ''}>
       <div className={classes.typeIcon}>
-        <FileIcon
-          className={classes.typeIcon}
-          extension="pdf"
-          {...defaultStyles.pdf}
-        />
+        <FileIcon className={classes.typeIcon} extension="pdf" {...defaultStyles.pdf} />
       </div>
       <div className={classes.nameLabel}>{file.Name}</div>
     </Link>

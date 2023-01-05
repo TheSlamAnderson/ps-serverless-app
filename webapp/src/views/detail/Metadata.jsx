@@ -14,7 +14,9 @@ function Metadata({ metadata }) {
       {metadata && metadata.modifiedDate && (
         <MetadataItem title="Date Modified" value={getFormattedDate(metadata.modifiedDate)} />
       )}
-      {metadata && metadata.pageCount && <MetadataItem title="Page Count" value={metadata.pageCount} />}
+      {metadata && metadata.pageCount && (
+        <MetadataItem title="Page Count" value={metadata.pageCount} />
+      )}
       {metadata && metadata.title && <MetadataItem title="Title" value={metadata.title} />}
       {metadata && metadata.keywords && <MetadataItem title="Keywords" value={metadata.keywords} />}
     </MetadataSection>

@@ -1,10 +1,18 @@
 import React from 'react';
 import {
-  Grid, Popper, Avatar, Grow, ClickAwayListener, Paper, MenuList, MenuItem,
+  Grid,
+  Popper,
+  Avatar,
+  Grow,
+  ClickAwayListener,
+  Paper,
+  MenuList,
+  MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
+import AuthGroupWrapper from './AuthGroupWrapper';
 import { useUser } from '../UserContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -89,13 +97,11 @@ function UserBadge() {
           <Grow {...TransitionProps} style={{ transformOrigin: placement === 'left-start' }}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MenuList
-                  autoFocusItem={open}
-                  id="menu-list-grow"
-                  onKeyDown={handleListKeyDown}
-                >
+                <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                   <MenuItem onClick={onProfileEdit}>Edit My Profile</MenuItem>
-                  <MenuItem onClick={onManageUsers}>Manage Users</MenuItem>
+                  <AuthGroupWrapper requiredGroups={['admin']}>
+                    <MenuItem onClick={onManageUsers}>Manage Users</MenuItem>
+                  </AuthGroupWrapper>
                   <MenuItem onClick={signOut}>Logout</MenuItem>
                 </MenuList>
               </ClickAwayListener>

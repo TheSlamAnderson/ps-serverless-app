@@ -30,7 +30,15 @@ export class AppDatabase extends cdk.Construct {
         type: dynamodb.AttributeType.STRING,
       },
       projectionType: dynamodb.ProjectionType.INCLUDE,
-      nonKeyAttributes: ['DateUploaded', 'Processed', 'Thumbnail', 'Uploader', 'FileSize', 'Name', 'Owner'],
+      nonKeyAttributes: [
+        'DateUploaded',
+        'Processed',
+        'Thumbnail',
+        'Uploader',
+        'FileSize',
+        'Name',
+        'Owner',
+      ],
     });
 
     this.documentsTable = documentsTable;

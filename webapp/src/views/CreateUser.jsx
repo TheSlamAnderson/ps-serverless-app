@@ -118,26 +118,26 @@ function CreateUser() {
   return (
     <Page title="Create User" breadcrumbs={getBreadcrumbs()}>
       {isSuccessVisible && (
-      <MuiAlert
-        onClose={() => setIsSuccessVisible(false)}
-        className={classes.alert}
-        severity="success"
-        elevation={6}
-        variant="filled"
-      >
-        User successfully created
-      </MuiAlert>
+        <MuiAlert
+          onClose={() => setIsSuccessVisible(false)}
+          className={classes.alert}
+          severity="success"
+          elevation={6}
+          variant="filled"
+        >
+          User successfully created
+        </MuiAlert>
       )}
       {isErrorVisible && (
-      <MuiAlert
-        onClose={() => setIsErrorVisible(false)}
-        className={classes.alert}
-        severity="error"
-        elevation={6}
-        variant="filled"
-      >
-        Could not create user. Please try again later.
-      </MuiAlert>
+        <MuiAlert
+          onClose={() => setIsErrorVisible(false)}
+          className={classes.alert}
+          severity="error"
+          elevation={6}
+          variant="filled"
+        >
+          Could not create user. Please try again later.
+        </MuiAlert>
       )}
       <Grid container spacing={2} alignItems="stretch">
         <Grid item xs={12} sm={6} className={classes.container}>
@@ -170,10 +170,7 @@ function CreateUser() {
         </Grid>
         <Grid item xs={12} sm={6} className={classes.container}>
           <Card className={classes.card}>
-            <CardHeader
-              title="Group Membership"
-              subheader="Determine the user's level of access"
-            />
+            <CardHeader title="Group Membership" subheader="Determine the user's level of access" />
             <CardContent>
               <FormControl component="fieldset">
                 <RadioGroup
@@ -182,21 +179,13 @@ function CreateUser() {
                   value={group}
                   onChange={(e) => setGroup(e.target.value)}
                 >
-                  <FormControlLabel
-                    value="admin"
-                    control={<Radio color="primary" />}
-                    label="Admin"
-                  />
+                  <FormControlLabel value="admin" control={<Radio color="primary" />} label="Admin" />
                   <FormControlLabel
                     value="contributor"
                     control={<Radio color="primary" />}
                     label="Contributor"
                   />
-                  <FormControlLabel
-                    value="reader"
-                    control={<Radio color="primary" />}
-                    label="Reader"
-                  />
+                  <FormControlLabel value="reader" control={<Radio color="primary" />} label="Reader" />
                 </RadioGroup>
               </FormControl>
             </CardContent>

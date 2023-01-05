@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Avatar,
-  Grid,
-  Typography,
-} from '@material-ui/core';
+import { Avatar, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useUser } from '../UserContext';
 
