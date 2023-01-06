@@ -39,19 +39,6 @@ export class ApplicationEvents extends cdk.Construct {
       eventBusName: 'com.globomantics.dms',
     });
 
-    const commentAddedRule = new events.Rule(this, 'CommentAddedRule', {
-      eventBus: bus,
-      enabled: true,
-      description: 'When a new comment is added to a document',
-      eventPattern: {
-        source: ['com.globomantics.dms.comments'],
-        detailType: ['CommentAdded'],
-      },
-      ruleName: 'CommentAddedRule',
-    });
-
-    commentAddedRule.addTarget(new targets.LambdaFunction(props.notificationsService));
-
     const failedProcessingRule = new events.Rule(this, 'FailedProcessingRule', {
       eventBus: bus,
       enabled: true,
@@ -64,5 +51,18 @@ export class ApplicationEvents extends cdk.Construct {
     });
 
     failedProcessingRule.addTarget(new targets.LambdaFunction(props.notificationsService));
+
+    const commentAddedRule = new events.Rule(this, 'CommentAddedRule', {
+      eventBus: bus,
+      enabled: true,
+      description: 'When a new comment is added to a document',
+      eventPattern: {
+        source: ['com.globomantics.dms.comments'],
+        detailType: ['CommentAdded'],
+      },
+      ruleName: 'CommentAddedRule',
+    });
+
+    commentAddedRule.addTarget(new targets.LambdaFunction(props.notificationsService));
   }
 }

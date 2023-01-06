@@ -45,7 +45,7 @@ export class DocumentProcessing extends cdk.Construct {
       layers: [
         lambda.LayerVersion.fromLayerVersionAttributes(this, 'GhostscriptLayerVersion', {
           layerVersionArn: 'arn:aws:lambda:us-east-2:764866452798:layer:ghostscript:8',
-          compatibleRuntimes: [lambda.Runtime.NODEJS_16_X],
+          compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
         }),
       ],
     });

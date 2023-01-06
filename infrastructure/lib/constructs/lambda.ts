@@ -6,7 +6,7 @@ type NodejsServiceFunctionProps = NodejsFunctionProps;
 
 export class NodejsServiceFunction extends NodejsFunction {
   constructor(scope: cdk.Construct, id: string, props: NodejsServiceFunctionProps) {
-    const runtime = props.runtime ?? lambda.Runtime.NODEJS_16_X;
+    const runtime = props.runtime ?? lambda.Runtime.NODEJS_14_X;
     const handler = 'handler';
     const bundling = {
       externalModules: ['aws-sdk'],

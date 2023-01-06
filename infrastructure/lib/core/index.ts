@@ -27,6 +27,8 @@ export class ApplicationStack extends cdk.Stack {
     const api = new ApplicationAPI(this, 'API', {
       commentsService: services.commentsService,
       documentsService: services.documentsService,
+      userPool: auth.userPool,
+      userPoolClient: auth.userPoolClient,
     });
 
     const processing = new DocumentProcessing(this, 'Processing', {
@@ -41,7 +43,7 @@ export class ApplicationStack extends cdk.Stack {
       notificationsService: services.notificationsService,
     });
 
-    new WebApp(this, 'WebApp', {
+    const webapp = new WebApp(this, 'WebApp', {
       hostingBucket: storage.hostingBucket,
       baseDirectory: '../',
       relativeWebAppPath: 'webapp',
@@ -49,5 +51,6 @@ export class ApplicationStack extends cdk.Stack {
       userPool: auth.userPool,
       userPoolClient: auth.userPoolClient,
     });
+    webapp.node.addDependency(auth);
   }
 }

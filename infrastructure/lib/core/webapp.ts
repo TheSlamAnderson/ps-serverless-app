@@ -2,8 +2,8 @@ import * as cdk from '@aws-cdk/core';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as cwt from 'cdk-webapp-tools';
-import * as apigw from '@aws-cdk/aws-apigatewayv2';
 import * as cognito from '@aws-cdk/aws-cognito';
+import * as apigw from '@aws-cdk/aws-apigatewayv2';
 
 interface WebAppProps {
   hostingBucket: s3.IBucket;

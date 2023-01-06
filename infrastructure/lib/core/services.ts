@@ -60,14 +60,14 @@ export class AppServices extends cdk.Construct {
       entry: path.join(__dirname, '../../../services/notifications/index.js'),
     });
 
-    props.documentsTable.grantReadData(this.notificationsService);
-
     this.notificationsService.addToRolePolicy(
       new iam.PolicyStatement({
         resources: ['*'],
-        actions: ['ses:SendEmail'],
+        actions: ['ses:SendEmail', 'ses:SendRawEmail'],
       }),
     );
+
+    props.documentsTable.grantReadData(this.notificationsService);
 
     this.notificationsService.addEnvironment('DYNAMO_DB_TABLE', props.documentsTable.tableName);
     this.notificationsService.addEnvironment(
