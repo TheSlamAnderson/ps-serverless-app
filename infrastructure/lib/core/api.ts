@@ -13,6 +13,7 @@ interface ApplicationAPIProps {
   documentsService: lambda.IFunction;
   userPool: cognito.IUserPool;
   userPoolClient: cognito.IUserPoolClient;
+  usersService: lambda.IFunction;
 }
 
 export class ApplicationAPI extends cdk.Construct {
@@ -82,6 +83,21 @@ export class ApplicationAPI extends cdk.Construct {
       path: `/documents/{proxy+}`,
       methods: serviceMethods,
       integration: documentsServiceIntegration,
+      authorizer,
+    });
+
+    // Users Service ------------------------------------------------------
+
+    const usersServiceIntegration = new apigi.HttpLambdaIntegration(
+      'UsersServiceIntegration',
+      props.usersService,
+      {},
+    );
+
+    this.httpApi.addRoutes({
+      path: `/users/{proxy+}`,
+      methods: serviceMethods,
+      integration: usersServiceIntegration,
       authorizer,
     });
 

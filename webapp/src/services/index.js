@@ -1,7 +1,6 @@
 import axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import { Auth } from 'aws-amplify';
-import * as mock from './mockData';
 
 let client;
 
@@ -71,36 +70,78 @@ export const uploadDocument = async (name, tags, file) => {
 
 // Users
 
+let userProfileData;
+
 export const getAllUsers = async () => {
-  console.log('[MOCK] Get all users');
-  return mock.mockCall(mock.allUsers, 2500);
+  if (!client) {
+    await createAPIClient();
+  }
+  const results = await client.get(`${SERVICES_HOST}/users/`);
+  console.log(`Results: ${JSON.stringify(results)}`);
+  return results.data.users;
 };
 
 export const createNewUser = async (email, name, group) => {
-  console.log(`[MOCK] Create New User: ${email} ${name} ${group}`);
-  return mock.mockCall({}, 1000);
+  if (!client) {
+    await createAPIClient();
+  }
+  const body = { email, name, group };
+  console.log(`Body: ${JSON.stringify(body)}`);
+  const results = await client.post(`${SERVICES_HOST}/users/`, body);
+  console.log(`Results: ${JSON.stringify(results)}`);
 };
 
 export const deleteUser = async (id) => {
-  console.log(`[MOCK] Delete User: ${id}`);
-  return mock.mockCall({}, 1000);
+  if (!client) {
+    await createAPIClient();
+  }
+  await client.delete(`${SERVICES_HOST}/users/${id}`);
 };
 
 export const getAllUserProfiles = async () => {
-  console.log('[MOCK] Get All User Profiles');
-  return mock.mockCall(mock.profiles, 1000);
+  if (!client) {
+    await createAPIClient();
+  }
+  const results = await client.get(`${SERVICES_HOST}/users/profiles`);
+  console.log(`Results: ${JSON.stringify(results)}`);
+  return results.data.users;
+};
+
+export const getProfileData = async (userId, forceRefresh = false) => {
+  if (!userProfileData || forceRefresh) {
+    userProfileData = await getAllUserProfiles();
+    console.log(`User Profile Data: ${JSON.stringify(userProfileData)}`);
+  }
+  const user = userProfileData.find((u) => u.userId === userId);
+  return user;
 };
 
 export const getCurrentUserProfile = async () => {
-  console.log('[MOCK] Get current user profile');
-  return mock.mockCall(mock.profile, 1000);
+  if (!client) {
+    await createAPIClient();
+  }
+  const results = await client.get(`${SERVICES_HOST}/users/profile`);
+  console.log(`Results: ${JSON.stringify(results)}`);
+  return results.data.user;
 };
 
 export const updateCurrentUserProfile = async (name, shouldDeletePicture, picture) => {
-  console.log(
-    `[MOCK] Update Current User ${name} Delete Pic: ${shouldDeletePicture} Pic: ${picture}`,
-  );
-  return mock.mockCall({}, 1000);
+  if (!client) {
+    await createAPIClient();
+  }
+  const formData = new FormData();
+  if (name) {
+    formData.append('name', name);
+  }
+  if (shouldDeletePicture) {
+    formData.append('deletePicture', true);
+  }
+  if (picture) {
+    formData.append('picture', picture);
+  }
+  const results = await client.patch(`${SERVICES_HOST}/users/profile`, formData);
+  console.log(`Results: ${JSON.stringify(results)}`);
+  return results.data.user;
 };
 
 // Comments --------------------------------------------------------------
