@@ -17,6 +17,7 @@ import {
   RouterType,
   Matcher,
   enforceGroupMembership,
+  getLogger,
 } from 'lambda-micro';
 import { AWSClients, generateID } from '../common';
 
@@ -81,6 +82,12 @@ const createSignedS3URL = async (unsignedURL) => {
 
 // Get all documents
 const getAllDocuments = async (request, response) => {
+  const logger = getLogger(request.event, request.context);
+  logger.trace('Sample Trace');
+  logger.debug('Sample Debug');
+  logger.info('Sample Info');
+  logger.warn('Sample Warn');
+  logger.error('Sample Error');
   const params = {
     TableName: tableName,
     IndexName: 'GSI1',
