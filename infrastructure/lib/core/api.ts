@@ -11,9 +11,9 @@ import * as sqs from '@aws-cdk/aws-sqs';
 interface ApplicationAPIProps {
   commentsService: lambda.IFunction;
   documentsService: lambda.IFunction;
+  usersService: lambda.IFunction;
   userPool: cognito.IUserPool;
   userPoolClient: cognito.IUserPoolClient;
-  usersService: lambda.IFunction;
 }
 
 export class ApplicationAPI extends cdk.Construct {

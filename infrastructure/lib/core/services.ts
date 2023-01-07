@@ -3,10 +3,10 @@ import * as cdk from '@aws-cdk/core';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as iam from '@aws-cdk/aws-iam';
 import * as s3 from '@aws-cdk/aws-s3';
+import * as cognito from '@aws-cdk/aws-cognito';
 import { NodejsFunction } from '@aws-cdk/aws-lambda-nodejs';
 import * as ssm from '@aws-cdk/aws-ssm';
 import { NodejsServiceFunction } from '../constructs/lambda';
-import * as cognito from '@aws-cdk/aws-cognito';
 
 interface AppServicesProps {
   documentsTable: dynamodb.ITable;
